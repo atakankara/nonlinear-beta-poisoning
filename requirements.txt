@@ -14,7 +14,7 @@ python-dateutil==2.8.2
 requests==2.26.0
 scikit-learn==1.0.2
 scipy==1.7.3
-secml==0.15
+secml[pytorch]==0.15
 six==1.16.0
 threadpoolctl==3.0.0
 torch==1.10.1

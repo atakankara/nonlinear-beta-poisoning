@@ -1,6 +1,11 @@
-from secml.ml.classifiers import CClassifierSVM, CClassifierLogistic
+import copy
+import torch
+import torch.nn as nn
+
+from secml.ml.classifiers import CClassifierSVM, CClassifierLogistic, CClassifierPyTorch
 from secml.ml.classifiers.loss import CLossCrossEntropy
 from src.classifier.secml_autograd import SecmlLayer, as_tensor
+from src.classifier.torch_classifier import Mlp
 
 
 def to_tensor(x, device="cpu"):
@@ -132,6 +137,38 @@ class LogisticClassifier(SecmlClassifier):
 
     def to_string(self):
         return "logistic"
+
+    def loss(self, x, labels):
+        return self.ce_loss(x, labels)
+
+
+class MlpClassifier(SecmlClassifier):
+    __class_type = "mlp"
+
+    def __init__(self, clf=None, outp=2, hidden_sizes=[128, ]):
+        super().__init__(clf)
+        self.outp = outp
+        self.hidden_sizes = hidden_sizes
+
+    def init_fit(self, ds, parameters):
+        in_shape = ds.X.shape
+        mlp = Mlp(in_shape[1], self.outp, self.hidden_sizes)
+        clf = CClassifierPyTorch(
+            model=mlp,
+            batch_size=64,
+            optimizer=torch.optim.Adam(mlp.parameters(), lr=1e-3),
+            input_shape=in_shape[1:],
+            loss=nn.CrossEntropyLoss()
+        )
+        self.clf = clf
+        self.fit(ds)
+        self.fitted = True
+
+    def deepcopy(self):
+        return MlpClassifier(self.clf.deepcopy(), self.outp, self.hidden_sizes)
+
+    def to_string(self):
+        return "mlp"
 
     def loss(self, x, labels):
         return self.ce_loss(x, labels)
