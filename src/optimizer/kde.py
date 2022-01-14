@@ -19,7 +19,7 @@ class GKDE(nn.Module):
 
 
 class GaussianOnFeatureSpace:
-    def __init__(self, ds, clf, store_ds=False):
+    def __init__(self, ds, clf, h, store_ds=False):
         self.data = ds.X.tondarray()
         self.labels = ds.Y.unique()
         self.clf = clf
@@ -37,7 +37,9 @@ class GaussianOnFeatureSpace:
             sigma = self._sigma(ds_y)
             self.stat_register[str(y)] = {"mu": mu, "sigma": sigma}
             if store_ds:
-                h = torch.cdist(ds_y, ds_y).mean()
+                if h == "average_distance":
+                    h = torch.cdist(ds_y, ds_y).mean() / 2
+                    
                 self.ds_register[str(y)] = GKDE(ds_y, bw=h)
 
     def _mu(self, data):
@@ -48,8 +50,8 @@ class GaussianOnFeatureSpace:
 
 
 class KDEGaussian(GaussianOnFeatureSpace):
-    def __init__(self, ds, clf):
-        super().__init__(ds, clf, store_ds=True)
+    def __init__(self, ds, clf, h):
+        super().__init__(ds, clf, h, store_ds=True)
 
     def pr(self, x, y=None):
         kde = self.get_dist(y)

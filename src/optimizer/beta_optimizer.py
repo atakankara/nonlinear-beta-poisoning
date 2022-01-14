@@ -52,9 +52,10 @@ def run_beta_attack(
     k=None,
     transform=to_scaled_img,
     verbose=False,
+    h="average_distance"
 ):
     n, m = val.X.shape
-    kernel = KDEGaussian(val, clf)
+    kernel = KDEGaussian(val, clf, h)
     x_poison = np.zeros((n_poison, m), dtype=val.X.dtype)
     x_proto = np.zeros((n_poison, k, m), dtype=val.X.dtype)
 

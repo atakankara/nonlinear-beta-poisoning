@@ -1,5 +1,6 @@
 from secml.array import CArray
 from src.classifier.clf_utilities import test_clf, test_poison
+from src.classifier.secml_classifier import MlpClassifier
 from src.experiments.utilities import *
 import csv
 
@@ -79,7 +80,7 @@ def run_attack(generator, path, clf, tr, val, ts, params):
             ]
         )
 
-        for _ in range(5):
+        for _ in range(3):
             for c in [1, 100]:
                 start = time.time()
                 clf.init_fit(tr, parameters={"C": c})
@@ -124,4 +125,8 @@ def run_attack(generator, path, clf, tr, val, ts, params):
                         res, tr, val, ts, clf, c, g_name, exec_time, params, writer,
                     )
                     file.flush()
+                
+                if isinstance(clf, MlpClassifier):
+                    break
+                
         file.close()
