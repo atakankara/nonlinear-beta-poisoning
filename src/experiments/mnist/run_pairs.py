@@ -9,6 +9,7 @@ from src.optimizer.beta_optimizer import beta_poison, to_scaled_img
 from src.optimizer.flip_poisoning import flip_batch_poison
 from src.optimizer.white_poisoning import white_poison
 import os
+from src.optimizer.kde import *
 
 if __name__ == "__main__":
     set_seed(444)
@@ -26,6 +27,20 @@ if __name__ == "__main__":
         clf = MlpClassifier(outp=2, hidden_sizes=[256, 128, 64])
     else:
         clf = SVMClassifier(k="linear")
+
+    if opts.kernel == "gaussian":
+        kernel = KDEGaussian(val, clf, opts.h)
+    elif opts.kernel == "tophat":
+        kernel = KDETophat(val, clf, opts.h)
+    elif opts.kernel == "epanechnikov":
+        kernel = KDEEpanechnikov(val, clf, opts.h)
+    elif opts.kernel == "gaussian2":
+        kernel = KDEGaussian2(val, clf, opts.h)
+    elif opts.kernel == "logistic":
+        kernel = KDELogistic(val, clf, opts.h)
+    elif opts.kernel == "sigmoid":
+        kernel = KDESigmoid(val, clf, opts.h)
+
     params = {
         "n_proto": opts.n_proto,
         "lb": 1,
@@ -40,7 +55,7 @@ if __name__ == "__main__":
 
     if "beta" in opts.generator:
         name = path + "beta_poison_k" + str(opts.n_proto)
-        run_attack(beta_poison, name, clf, tr, val, ts, params=params)
+        run_attack(beta_poison, name, clf, tr, val, ts, params=params, kernel=kernel)
     if "white" in opts.generator:
         name = path + "white_poison"
         run_attack(white_poison, name, clf, tr, val, ts, params=params)
