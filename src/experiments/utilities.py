@@ -61,7 +61,7 @@ op.add_option(
     "- [flip] for label flip attack",
 )
 op.add_option(
-    "--classifier", type=str, default="mlp3", help="Attack 'svm' or 'logistic'",
+    "--classifier", type=str, default="svm", help="Attack 'svm' or 'logistic'",
 )
 op.add_option(
     "--lb",
@@ -70,7 +70,7 @@ op.add_option(
     help="Regularization parameter for closeness to kde.",
 )
 op.add_option(
-    "--n_proto", type=int, default=15, help="Number of prototypes.",
+    "--n_proto", type=int, default=10, help="Number of prototypes.",
 )
 
 op.add_option(
