@@ -46,5 +46,5 @@ $ ./run_experiments.sh cifar_ablation # ablation on cifar
 
 ## Contact
 
-* antonioemanuele.cina [at] unive [dot] it
+* berdem21@ku.edu.tr
 
