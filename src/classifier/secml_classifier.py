@@ -172,3 +172,19 @@ class MlpClassifier(SecmlClassifier):
 
     def loss(self, x, labels):
         return self.ce_loss(x, labels)
+
+
+class CnnClassifier(SecmlClassifier):
+    __class_type = "cnn"
+
+    #TO-DO:
+    """"
+    def __init__(self):
+    def init_fit(self, ds, parameters):
+    def deepcopy(self):
+    """
+    def to_string(self):
+        return "cnn"
+
+    def loss(self, x, labels):
+        return self.ce_loss(x, labels)
