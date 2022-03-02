@@ -257,3 +257,5 @@ $RECYCLE.BIN/
 src/secml/VERSION_REV
 *.pdf
 IJCNN_Experiments
+
+*.csv

@@ -1,5 +1,6 @@
 from secml.array import CArray
 from src.classifier.clf_utilities import test_clf, test_poison
+from src.classifier.secml_classifier import MlpClassifier
 from src.experiments.utilities import *
 import csv
 
@@ -61,13 +62,13 @@ def write_bin(rs, tr, val, ts, clf, c, algorithm, time, params, writer):
     )
 
 
-def run_attack(generator, path, clf, tr, val, ts, params):
+def run_attack(generator, path, clf, tr, val, ts, params, kernel=None):
     set_seed(444)
     box = (val.X.min(), val.X.max())
     n_poisoning_points = np.linspace(start=0.05, stop=0.25, num=10) * tr.Y.size
     g_name = path.split("/")[-1]
 
-    with open(path + ".csv", "w") as file:
+    with open(path + f"_{kernel.__name__}.csv", "w") as file:
         writer = csv.writer(
             file, escapechar=" ", quoting=csv.QUOTE_NONE, quotechar="", delimiter=","
         )
@@ -116,6 +117,7 @@ def run_attack(generator, path, clf, tr, val, ts, params):
                         y_poison=params["y_poison"],
                         verbose=False,
                         transform=params["transform"],
+                        kernel=kernel
                     )
 
                     exec_time = time.time() - start
@@ -124,4 +126,8 @@ def run_attack(generator, path, clf, tr, val, ts, params):
                         res, tr, val, ts, clf, c, g_name, exec_time, params, writer,
                     )
                     file.flush()
+                
+                if isinstance(clf, MlpClassifier):
+                    break
+                
         file.close()

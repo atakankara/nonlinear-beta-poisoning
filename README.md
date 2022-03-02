@@ -1,8 +1,12 @@
 # Introduction 
-This repository contains the source code to support the paper 
+This repository contains the modified source code of the paper 
 **The Hammer and the Nut: Is Bilevel Optimization Really Needed to Poison Linear Classifiers?**, 
 by Antonio Emanuele Cinà, Sebastiano Vascon, Ambra Demontis, Battista Biggio, Fabio Roli and Marcello Pelillo,
 accepted at IJCNN 2021.
+In the concept of data privacy and security lecture at Koç University,
+we extended beta-poisoning attacks on non-linear classifiers and compare 
+the results with baseline attacks (e.g label flipping, clean label poisoning) on MNIST and CIFAR-10 datasets.
+
 
 
 # Installation 
@@ -46,5 +50,7 @@ $ ./run_experiments.sh cifar_ablation # ablation on cifar
 
 ## Contact
 
-* antonioemanuele.cina [at] unive [dot] it
-
+## Contact
+* akara18@ku.edu.tr
+* berdem21@ku.edu.tr
+* nkoprucu16@ku.edu.tr

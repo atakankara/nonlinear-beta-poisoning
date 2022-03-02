@@ -80,4 +80,12 @@ op.add_option(
     help="Dataset subset. Classes are separated by `-`. Ex: 4-0 refers to classes 4 and 0",
 )
 
+op.add_option(
+    "--kernel", type=str, default="sigmoid", help="type of the kernel",
+)
+
+op.add_option(
+    "--h", type=str, default="average_distance", help="bandwith parameter of the kernel function",
+)
+
 (opts, args) = op.parse_args(sys.argv[1:])

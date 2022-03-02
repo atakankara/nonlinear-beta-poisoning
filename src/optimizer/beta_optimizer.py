@@ -52,9 +52,11 @@ def run_beta_attack(
     k=None,
     transform=to_scaled_img,
     verbose=False,
+    h="average_distance",
+    kernel=None
 ):
     n, m = val.X.shape
-    kernel = KDEGaussian(val, clf)
+    kernel = kernel
     x_poison = np.zeros((n_poison, m), dtype=val.X.dtype)
     x_proto = np.zeros((n_poison, k, m), dtype=val.X.dtype)
 
@@ -89,6 +91,8 @@ def beta_poison(
     y_poison=None,
     verbose=False,
     transform=to_scaled_img,
+    h="average_distance",
+    kernel=None
 ):
 
     # the attacker specify the target classes
@@ -107,5 +111,7 @@ def beta_poison(
         lb=lb,
         verbose=verbose,
         transform=transform,
+        h=h,
+        kernel=kernel
     )
     return x_poison, y_poison_chosen
