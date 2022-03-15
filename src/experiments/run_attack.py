@@ -62,13 +62,13 @@ def write_bin(rs, tr, val, ts, clf, c, algorithm, time, params, writer):
     )
 
 
-def run_attack(generator, path, clf, tr, val, ts, params, kernel=None):
+def run_attack(generator, path, clf, tr, val, ts, h, params, kernel=None):
     set_seed(444)
     box = (val.X.min(), val.X.max())
     n_poisoning_points = np.linspace(start=0.05, stop=0.25, num=10) * tr.Y.size
     g_name = path.split("/")[-1]
 
-    with open(path + f"_{kernel.__name__}.csv", "w") as file:
+    with open(path + f"_{kernel.__name__}_h_{h}.csv", "w") as file:
         writer = csv.writer(
             file, escapechar=" ", quoting=csv.QUOTE_NONE, quotechar="", delimiter=","
         )
@@ -79,8 +79,8 @@ def run_attack(generator, path, clf, tr, val, ts, params, kernel=None):
                 "time"
             ]
         )
-
-        for _ in range(5):
+        print("kernel_name:" , kernel.__name__)
+        for _ in range(1):
             for c in [1, 100]:
                 start = time.time()
                 clf.init_fit(tr, parameters={"C": c})

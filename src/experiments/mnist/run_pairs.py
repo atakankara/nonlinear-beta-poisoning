@@ -28,37 +28,40 @@ if __name__ == "__main__":
     else:
         clf = SVMClassifier(k="linear")
 
-    if opts.kernel == "gaussian":
-        kernel = KDEGaussian(val, clf, opts.h)
-    elif opts.kernel == "tophat":
-        kernel = KDETophat(val, clf, opts.h)
-    elif opts.kernel == "epanechnikov":
-        kernel = KDEEpanechnikov(val, clf, opts.h)
-    elif opts.kernel == "gaussian2":
-        kernel = KDEGaussian2(val, clf, opts.h)
-    elif opts.kernel == "logistic":
-        kernel = KDELogistic(val, clf, opts.h)
-    elif opts.kernel == "sigmoid":
-        kernel = KDESigmoid(val, clf, opts.h)
 
-    params = {
-        "n_proto": opts.n_proto,
-        "lb": 1,
-        "y_target": None,
-        "y_poison": None,
-        "transform": to_scaled_img,
-    }
-    path = opts.path + "/mnist-{}-tr{}/{}/".format(
-        opts.ds, tr.X.shape[0], opts.classifier
-    )
-    os.makedirs(path, exist_ok=True)
+    for h in [1]:
+        print(f"{h=}")
+        if opts.kernel == "gaussian":
+            kernel = KDEGaussian(val, clf, h)
+        elif opts.kernel == "tophat":
+            kernel = KDETophat(val, clf, h)
+        elif opts.kernel == "epanechnikov":
+            kernel = KDEEpanechnikov(val, clf, h)
+        elif opts.kernel == "gaussian2":
+            kernel = KDEGaussian2(val, clf, h)
+        elif opts.kernel == "logistic":
+            kernel = KDELogistic(val, clf, h)
+        elif opts.kernel == "sigmoid":
+            kernel = KDESigmoid(val, clf, h)
 
-    if "beta" in opts.generator:
-        name = path + "beta_poison_k" + str(opts.n_proto)
-        run_attack(beta_poison, name, clf, tr, val, ts, params=params, kernel=kernel)
-    if "white" in opts.generator:
-        name = path + "white_poison"
-        run_attack(white_poison, name, clf, tr, val, ts, params=params)
-    if "flip" in opts.generator:
-        name = path + "flip"
-        run_attack(flip_batch_poison, name, clf, tr, val, ts, params=params)
+        params = {
+            "n_proto": opts.n_proto,
+            "lb": 1,
+            "y_target": None,
+            "y_poison": None,
+            "transform": to_scaled_img,
+        }
+        path = opts.path + "/mnist-{}-tr{}/{}/".format(
+            opts.ds, tr.X.shape[0], opts.classifier
+        )
+        os.makedirs(path, exist_ok=True)
+
+        if "beta" in opts.generator:
+            name = path + "beta_poison_k" + str(opts.n_proto)
+            run_attack(beta_poison, name, clf, tr, val, ts, h, params=params, kernel=kernel)
+        if "white" in opts.generator:
+            name = path + "white_poison"
+            run_attack(white_poison, name, clf, tr, val, ts, params=params)
+        if "flip" in opts.generator:
+            name = path + "flip"
+            run_attack(flip_batch_poison, name, clf, tr, val, ts, params=params)

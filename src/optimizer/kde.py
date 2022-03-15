@@ -5,7 +5,7 @@ import torch.nn as nn
 import math
 
 class OnFeatureSpace:
-    def __init__(self, ds, clf, h, store_ds=False, kernel="gaussian"):
+    def __init__(self, ds, clf, h_coeff, store_ds=False, kernel="gaussian"):
         self.data = ds.X.tondarray()
         self.labels = ds.Y.unique()
         self.clf = clf
@@ -23,8 +23,8 @@ class OnFeatureSpace:
             sigma = self._sigma(ds_y)
             self.stat_register[str(y)] = {"mu": mu, "sigma": sigma}
             if store_ds:
-                if h == "average_distance":
-                    h = torch.cdist(ds_y, ds_y).mean() / 2
+                # if h == "average_distance":
+                h = (torch.cdist(ds_y, ds_y).mean() / 2)*h_coeff
 
                 if kernel == "gaussian":   
                     self.ds_register[str(y)] = GKDE(ds_y, bw=h)
