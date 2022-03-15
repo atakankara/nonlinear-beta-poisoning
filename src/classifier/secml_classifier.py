@@ -5,7 +5,7 @@ import torch.nn as nn
 from secml.ml.classifiers import CClassifierSVM, CClassifierLogistic, CClassifierPyTorch
 from secml.ml.classifiers.loss import CLossCrossEntropy
 from src.classifier.secml_autograd import SecmlLayer, as_tensor
-from src.classifier.torch_classifier import Mlp
+from src.classifier.torch_classifier import Mlp, ConvNN
 
 
 def to_tensor(x, device="cpu"):
@@ -177,12 +177,27 @@ class MlpClassifier(SecmlClassifier):
 class CnnClassifier(SecmlClassifier):
     __class_type = "cnn"
 
-    #TO-DO:
-    """"
-    def __init__(self):
+    def __init__(self, numChannels, classes, clf=None,):
+        super().__init__(clf)
+        self.numChannels = numChannels
+        self.classes = classes
+
     def init_fit(self, ds, parameters):
+        in_shape = ds.X.shape
+        cnn = ConvNN(self.numChannels, self.classes)
+        self.clf = CClassifierPyTorch(
+            model=cnn,
+            batch_size=64,
+            optimizer=torch.optim.Adam(cnn.parameters(), lr=1e-3),
+            input_shape=in_shape[1:],
+            loss=nn.CrossEntropyLoss()
+        )
+        self.fit(ds)
+        self.fitted = True
+
     def deepcopy(self):
-    """
+        return CnnClassifier(self.numChannels, self.classes, clf=self.clf.deepcopy())
+
     def to_string(self):
         return "cnn"
 
