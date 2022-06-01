@@ -9,6 +9,7 @@ from src.optimizer.beta_optimizer import beta_poison, to_scaled_img
 from src.optimizer.flip_poisoning import flip_batch_poison
 from src.optimizer.white_poisoning import white_poison
 import os
+from src.optimizer.kde import *
 
 if __name__ == "__main__":
     set_seed(444)
@@ -40,7 +41,7 @@ if __name__ == "__main__":
 
     if "beta" in opts.generator:
         name = path + "beta_poison_k" + str(opts.n_proto)
-        run_attack(beta_poison, name, clf, tr, val, ts, params=params)
+        run_attack(beta_poison, name, clf, tr, val, ts, 1, params=params, kernel=KDEGaussian(val, clf, 1))
     if "white" in opts.generator:
         name = path + "white_poison"
         run_attack(white_poison, name, clf, tr, val, ts, params=params)

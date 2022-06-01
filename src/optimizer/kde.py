@@ -38,6 +38,8 @@ class OnFeatureSpace:
                     self.ds_register[str(y)] = LogisticKDE(ds_y, bw=h)
                 elif kernel == "sigmoid":
                     self.ds_register[str(y)] = SigmoidKDE(ds_y, bw=h)
+                elif kernel == "mlp":
+                    self.ds_register[str(y)] = MlpKDE(ds_y, bw=h)
                 else:
                     raise Exception()
 
@@ -238,3 +240,48 @@ class SigmoidKDE(nn.Module):
         p = torch.tanh(num).sum()
         p *= 1 / n
         return p
+
+########################### MLP ######################
+
+class KDEMlp(OnFeatureSpace):
+    def __init__(self, ds, clf, h):
+        super().__init__(ds, clf, h, store_ds=True, kernel="mlp")
+
+    def pr(self, x, y=None):
+        kde = self.get_dist(y)
+        phi_x = self.clf.transform(x)
+        p = kde(phi_x, y)
+        return p
+
+    def get_dist(self, y):
+        key = str(y)
+        return self.ds_register[key]
+    
+class MlpKDE(nn.Module):
+    def __init__(self, data, bw):
+        super().__init__()
+        self.model = torch.load('binary_classifier.pt')
+        self.model.eval()
+        self.__name__ = "mlp_kernel"
+
+    def forward(self, x, y):
+        prob = self.model(x)
+        return prob[0][0] / prob[0][0].sum() if y == 0 else prob[0][1] / prob[0][1].sum()
+
+
+class Feedforward(torch.nn.Module):
+        def __init__(self, input_size, hidden_size, pdrop=0.2):
+            super(Feedforward, self).__init__()
+            self.input_size = input_size
+            self.hidden_size  = hidden_size
+            self.dropout = torch.nn.Dropout(p=pdrop)
+            self.fc1 = torch.nn.Linear(self.input_size, self.hidden_size)
+            self.relu = torch.nn.ReLU()
+            self.fc2 = torch.nn.Linear(self.hidden_size, 2)
+            self.softmax = torch.nn.Softmax()
+        def forward(self, x):
+            after_drop = self.dropout(x)
+            hidden = self.fc1(after_drop)
+            relu = self.relu(hidden)
+            output = self.fc2(relu)
+            return output

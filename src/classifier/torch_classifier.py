@@ -7,6 +7,7 @@ from torch.nn import MaxPool2d
 from torch.nn import ReLU
 from torch.nn import LogSoftmax
 from torch import flatten
+import torch
 
 class Mlp(nn.Module):
     def __init__(self, inp_size, out_size, hidden_sizes=[128, ], nonlinearity=nn.ReLU):
@@ -41,6 +42,7 @@ class ConvNN(nn.Module):
         self.logSoftmax = LogSoftmax(dim=1)
     
     def forward(self, x):
+        x = torch.reshape(x, (x.shape[0], 1, 28, 28))
         x = self.conv1(x)
         x = self.relu1(x)
         x = self.maxpool1(x)

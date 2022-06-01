@@ -4,7 +4,7 @@ sys.path.extend(["./"])
 
 from data.mnist_loader import *
 from src.experiments.run_attack import *
-from src.classifier.secml_classifier import SVMClassifier, LogisticClassifier, MlpClassifier
+from src.classifier.secml_classifier import SVMClassifier, LogisticClassifier, MlpClassifier, CnnClassifier
 from src.optimizer.beta_optimizer import beta_poison, to_scaled_img
 from src.optimizer.flip_poisoning import flip_batch_poison
 from src.optimizer.white_poisoning import white_poison
@@ -25,12 +25,20 @@ if __name__ == "__main__":
         clf = MlpClassifier(outp=2, hidden_sizes=[256, 128])
     elif opts.classifier == "mlp3":
         clf = MlpClassifier(outp=2, hidden_sizes=[256, 128, 64])
-    else:
+    elif opts.classifier == "cnn":
+        clf = CnnClassifier(1, 2) #TODO:enter parameters
+    elif opts.classifier == "svm-linear":
+        clf = SVMClassifier(k="linear")
+    elif opts.classifier == "svm-rbf":
+        from secml.ml import CKernelRBF
+        clf = SVMClassifier(k=CKernelRBF(gamma=float(opts.gamma)))
+    elif opts.classifier == "svm-poly":
+        clf = SVMClassifier(k="poly")
+    else :
         clf = SVMClassifier(k="linear")
 
 
     for h in [1]:
-        print(f"{h=}")
         if opts.kernel == "gaussian":
             kernel = KDEGaussian(val, clf, h)
         elif opts.kernel == "tophat":
@@ -43,6 +51,10 @@ if __name__ == "__main__":
             kernel = KDELogistic(val, clf, h)
         elif opts.kernel == "sigmoid":
             kernel = KDESigmoid(val, clf, h)
+        elif opts.kernel == "mlp_kernel":
+            kernel = KDEMlp(val, clf, h)
+        else:
+            raise Exception()
 
         params = {
             "n_proto": opts.n_proto,
@@ -50,6 +62,7 @@ if __name__ == "__main__":
             "y_target": None,
             "y_poison": None,
             "transform": to_scaled_img,
+            # "gamma": opts.gamma
         }
         path = opts.path + "/mnist-{}-tr{}/{}/".format(
             opts.ds, tr.X.shape[0], opts.classifier
@@ -61,7 +74,7 @@ if __name__ == "__main__":
             run_attack(beta_poison, name, clf, tr, val, ts, h, params=params, kernel=kernel)
         if "white" in opts.generator:
             name = path + "white_poison"
-            run_attack(white_poison, name, clf, tr, val, ts, params=params)
+            run_attack(white_poison, name, clf, tr, val, ts, h, params=params)
         if "flip" in opts.generator:
             name = path + "flip"
-            run_attack(flip_batch_poison, name, clf, tr, val, ts, params=params)
+            run_attack(flip_batch_poison, name, clf, tr, val, ts, h, params=params)

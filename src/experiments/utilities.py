@@ -70,7 +70,7 @@ op.add_option(
     help="Regularization parameter for closeness to kde.",
 )
 op.add_option(
-    "--n_proto", type=int, default=10, help="Number of prototypes.",
+    "--n_proto", type=int, default=15, help="Number of prototypes.",
 )
 
 op.add_option(
@@ -81,11 +81,11 @@ op.add_option(
 )
 
 op.add_option(
-    "--kernel", type=str, default="sigmoid", help="type of the kernel",
+    "--kernel", type=str, default="gaussian", help="type of the kernel",
 )
 
 op.add_option(
-    "--h", type=str, default="average_distance", help="bandwith parameter of the kernel function",
+    "--h", type=str, default="1", help="bandwith parameter of the kernel function",
 )
 
 (opts, args) = op.parse_args(sys.argv[1:])
