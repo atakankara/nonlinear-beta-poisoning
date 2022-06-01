@@ -259,3 +259,7 @@ src/secml/VERSION_REV
 IJCNN_Experiments
 
 *.csv
+*.png
+*.jpg
+*.pickle
+*.zip
