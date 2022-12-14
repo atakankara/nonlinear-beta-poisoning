@@ -256,10 +256,19 @@ $RECYCLE.BIN/
 ###################################
 src/secml/VERSION_REV
 *.pdf
-IJCNN_Experiments
+TPS_experiments
 
 *.csv
 *.png
 *.jpg
 *.pickle
 *.zip
+*.pckl
+*.pt
+*.h5
+*.pkl
+
+10-class/*
+cifar10/*
+*.pb
+discriminator/*
