@@ -272,3 +272,5 @@ TPS_experiments
 cifar10/*
 *.pb
 discriminator/*
+
+notebooks/cifar10/*
