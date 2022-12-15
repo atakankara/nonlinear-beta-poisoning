@@ -36,13 +36,18 @@ class ConvNN(nn.Module):
             kernel_size=(5, 5))
         self.relu2 = ReLU()
         self.maxpool2 = MaxPool2d(kernel_size=(2, 2), stride=(2, 2))
-        self.fc1 = Linear(in_features=800, out_features=500)
+        self.fc1 = Linear(in_features=1250, out_features=700)
         self.relu3 = ReLU()
-        self.fc2 = Linear(in_features=500, out_features=classes)
+        self.fc2 = Linear(in_features=700, out_features=classes)
         self.logSoftmax = LogSoftmax(dim=1)
     
     def forward(self, x):
-        x = torch.reshape(x, (x.shape[0], 1, 28, 28))
+        if x.shape[1] == 1: # if mnist
+            x = torch.reshape(x, (-1, 1, 28, 28))
+        elif x.shape[1] == 3: # if cifar
+            x = torch.reshape(x, (-1, 3, 32, 32))
+        else:
+            raise ValueError("Invalid input shape")
         x = self.conv1(x)
         x = self.relu1(x)
         x = self.maxpool1(x)

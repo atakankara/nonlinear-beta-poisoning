@@ -34,47 +34,47 @@ if __name__ == "__main__":
         clf = SVMClassifier(k=CKernelRBF(gamma=float(opts.gamma)))
     elif opts.classifier == "svm-poly":
         clf = SVMClassifier(k="poly")
-    else :
-        clf = SVMClassifier(k="linear")
+    else:
+        raise Exception("Classifier not found")
 
+    h = float(opts.h)
 
-    for h in [1]:
-        if opts.kernel == "gaussian":
-            kernel = KDEGaussian(val, clf, h)
-        elif opts.kernel == "tophat":
-            kernel = KDETophat(val, clf, h)
-        elif opts.kernel == "epanechnikov":
-            kernel = KDEEpanechnikov(val, clf, h)
-        elif opts.kernel == "gaussian2":
-            kernel = KDEGaussian2(val, clf, h)
-        elif opts.kernel == "logistic":
-            kernel = KDELogistic(val, clf, h)
-        elif opts.kernel == "sigmoid":
-            kernel = KDESigmoid(val, clf, h)
-        elif opts.kernel == "mlp_kernel":
-            kernel = KDEMlp(val, clf, h)
-        else:
-            raise Exception()
+    if opts.kernel == "gaussian":
+        kernel = KDEGaussian(val, clf, h)
+    elif opts.kernel == "tophat":
+        kernel = KDETophat(val, clf, h)
+    elif opts.kernel == "epanechnikov":
+        kernel = KDEEpanechnikov(val, clf, h)
+    elif opts.kernel == "gaussian2":
+        kernel = KDEGaussian2(val, clf, h)
+    elif opts.kernel == "logistic":
+        kernel = KDELogistic(val, clf, h)
+    elif opts.kernel == "sigmoid":
+        kernel = KDESigmoid(val, clf, h)
+    elif opts.kernel == "mlp_kernel":
+        kernel = KDEMlp(val, clf, h)
+    else:
+        raise Exception()
 
-        params = {
-            "n_proto": opts.n_proto,
-            "lb": 1,
-            "y_target": None,
-            "y_poison": None,
-            "transform": to_scaled_img,
-            # "gamma": opts.gamma
-        }
-        path = opts.path + "/mnist-{}-tr{}/{}/".format(
-            opts.ds, tr.X.shape[0], opts.classifier
-        )
-        os.makedirs(path, exist_ok=True)
+    params = {
+        "n_proto": opts.n_proto,
+        "lb": 1,
+        "y_target": None,
+        "y_poison": None,
+        "transform": to_scaled_img,
+        # "gamma": opts.gamma
+    }
+    path = opts.path + "/mnist-{}-tr{}/{}/".format(
+        opts.ds, tr.X.shape[0], opts.classifier
+    )
+    os.makedirs(path, exist_ok=True)
 
-        if "beta" in opts.generator:
-            name = path + "beta_poison_k" + str(opts.n_proto)
-            run_attack(beta_poison, name, clf, tr, val, ts, h, params=params, kernel=kernel)
-        if "white" in opts.generator:
-            name = path + "white_poison"
-            run_attack(white_poison, name, clf, tr, val, ts, h, params=params)
-        if "flip" in opts.generator:
-            name = path + "flip"
-            run_attack(flip_batch_poison, name, clf, tr, val, ts, h, params=params)
+    if "beta" in opts.generator:
+        name = path + "beta_poison_k" + str(opts.n_proto)
+        run_attack(beta_poison, name, clf, tr, val, ts, h, params=params, kernel=kernel)
+    if "white" in opts.generator:
+        name = path + "white_poison"
+        run_attack(white_poison, name, clf, tr, val, ts, h, params=params)
+    if "flip" in opts.generator:
+        name = path + "flip"
+        run_attack(flip_batch_poison, name, clf, tr, val, ts, h, params=params)

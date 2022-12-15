@@ -48,7 +48,7 @@ op.add_option(
 op.add_option(
     "--path",
     type=str,
-    default="./IJCNN_Experiments",
+    default="./TPS_experiments",
     help="Destination path, where results will be stored.",
 )
 op.add_option(
@@ -61,7 +61,7 @@ op.add_option(
     "- [flip] for label flip attack",
 )
 op.add_option(
-    "--classifier", type=str, default="svm", help="Attack 'svm' or 'logistic'",
+    "--classifier", type=str, default="svm-linear", help="Attack 'svm' or 'logistic'",
 )
 op.add_option(
     "--lb",
