@@ -1,11 +1,6 @@
 # Introduction 
-This repository contains the modified source code of the paper 
-**The Hammer and the Nut: Is Bilevel Optimization Really Needed to Poison Linear Classifiers?**, 
-by Antonio Emanuele Cinà, Sebastiano Vascon, Ambra Demontis, Battista Biggio, Fabio Roli and Marcello Pelillo,
-accepted at IJCNN 2021.
-In the concept of data privacy and security lecture at Koç University,
-we extended beta-poisoning attacks on non-linear classifiers and compare 
-the results with baseline attacks (e.g label flipping, clean label poisoning) on MNIST and CIFAR-10 datasets.
+This repository contains the source code for the paper **Beta Poisoning Attacks Against Machine Learning Models: Extensions, Limitations, and Defenses**, by Atakan Kara, Nursena Köprücü, M. Emre Gürsoy, accepted at IEEE TPS 2022: IEEE International Conference on Trust, Privacy and Security in Intelligent Systems, and Applications. It is cloned from the original implementation of beta poisoning, which you can find [here](https://github.com/Cinofix/beta_poisoning).
+
 
 
 
@@ -19,7 +14,7 @@ Then you need to activate the conda env by running `conda activate beta_poison`
 
 # Experiments
 The file `run_experiments.sh` contains a list of commands to replicate the experiments and results
-proposed in our paper. Output files are, by default, saved in "IJCNN_Experiments/" dir.
+proposed in our paper. Output files are, by default, saved in "TPS_experiments/" dir.
 
 ### MNIST Pairs
 Experiments for MNIST Pairs (4 vs. 0 and 9 vs. 8):
