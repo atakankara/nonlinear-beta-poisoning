@@ -44,6 +44,6 @@ $ ./run_experiments.sh cifar_ablation # ablation on cifar
 ```
 
 ## Contact
-* akara18@ku.edu.tr
-* berdem21@ku.edu.tr
-* nkoprucu16@ku.edu.tr
+* akara18 [at] ku.edu.tr
+* berdem21 [at] ku.edu.tr
+* nkoprucu16 [at] ku.edu.tr
